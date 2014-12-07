@@ -42,4 +42,12 @@ module.exports = {
     // do something inside foo/bar/folder
     .then(folders.comeBack)
     .done();
+
+  if you need to return value before returning use Q.tap
+  folders.to('foo/bar/folder')
+    .then(function () {
+      return 'foo';
+    })
+    .tap(folders.comeBack);
+    // resolved with value 'foo'
 */

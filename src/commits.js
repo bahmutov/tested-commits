@@ -2,37 +2,27 @@ require('lazy-ass');
 var check = require('check-more-types');
 var ggit = require('ggit');
 var fs = require('fs');
+var folders = require('./folder');
 
 // returns commit info inside given repo folder
 function commits(gitRepoRootFolder) {
   la(check.unemptyString(gitRepoRootFolder), 'missing git repo folder');
   la(fs.existsSync(gitRepoRootFolder), 'cannot find folder', gitRepoRootFolder);
 
-  return ggit.getOneLineLog().then(function (commits) {
-    la(check.array(commits), 'commits', commits);
-    console.log('found', commits.length, 'commits');
-
-    var ids = R.map(R.prop('id'))(commits);
-    var messages = R.map(R.prop('message'))(commits);
-    var commitInfo = R.zipObj(ids, messages);
-
-    return q.all(blameForFiles).then(function (blames) {
-      la(check.array(blames), 'blame info', blames);
-      console.log('found blame info for', blames.length, 'files');
-
-      var fileBlame = R.zipObj(jsFiles, blames);
-
-      // console.log(blames);
-      return {
-        commits: commitInfo,
-        files: fileBlame
-      };
-    });
-
-  }).then(modifiedCoveragePerCommit)
-  .finally(function () {
-    process.chdir(currentFolder);
-  }).done();
+  return folders.to(gitRepoRootFolder)
+    .then(ggit.getOneLineLog)
+    .tap(folders.comeBack);
 }
 
 module.exports = commits;
+
+/*
+  // returns commits from given repo folder
+  // latest commits first
+
+  // get last 2 commits and print them
+  commits(gitRepoFolder)
+    .then(R.take(2))
+    .then(console.table)
+    .done();
+*/

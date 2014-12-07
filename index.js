@@ -16,6 +16,7 @@ var instrumenter = new istanbul.Instrumenter();
 var read = require('fs').readFileSync;
 
 var folders = require('./src/folder');
+var commits = require('./src/commits');
 
 var gitRepoFolder = '../foo-bar-baz';
 /*
@@ -31,9 +32,17 @@ function toFolder(folder) {
 currentFolder = toFolder(gitRepoFolder);
 */
 
+/*
 folders.to(gitRepoFolder)
+  .then()
   .then(folders.comeBack)
+  .done();*/
+
+commits(gitRepoFolder)
+  .then(R.take(2))
+  .then(console.table)
   .done();
+
 
 /*
 var glob = require('glob');
