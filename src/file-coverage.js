@@ -5,6 +5,8 @@ var read = require('fs').readFileSync;
 var istanbul = require('istanbul');
 
 function fileCoverage(filenames) {
+  console.log('computing file coverage for');
+  console.log(filenames.join('\n'));
   var coverages = filenames.map(codeLinesInFile);
   var coverage = R.zipObj(filenames, coverages);
   return coverage;
@@ -29,4 +31,4 @@ function codeLinesInFile(filename) {
 }
 
 module.exports = check.defend(fileCoverage,
-  check.arrayOfStrings, 'need list of files');
+  check.arrayOfStrings, 'need list of files to compute file coverage');

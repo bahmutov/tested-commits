@@ -21,6 +21,8 @@ var commits = require('./src/commits');
 var sourceFiles = require('./src/js-source-files');
 var commitPerLine = require('./src/commit-per-line');
 var fileCoverage = require('./src/file-coverage');
+var coveragePerCommit = require('./src/coverage-per-commit');
+var repoToCoverage = require('./src/repo-to-separate-coverage');
 
 var gitRepoFolder = '../foo-bar-baz';
 /*
@@ -67,13 +69,40 @@ folders.to(gitRepoFolder)
   .done();
 */
 
-var initialCoverage;
+/*
+var filenames, commitsById, initialCoverage;
 
-folders.to(gitRepoFolder)
+commits.all(gitRepoFolder)
+  .then(R.take(2))
+  .then(commits.byId)
+  .then(function (c) {
+    commitsById = c;
+    console.log('commits by id', commitsById);
+  })
+  .then(folders.to.bind(null, gitRepoFolder))
   .then(d3h.hermit(sourceFiles))
+  .then(function (names) {
+    la(check.arrayOfStrings(names), 'could not find filenames', names);
+    filenames = names;
+    return filenames;
+  })
   .then(fileCoverage)
-  .then(console.log)
+  .then(function (coverage) {
+    la(check.object(coverage), 'expected initial coverage');
+    initialCoverage = coverage;
+  })
+  .then(function () {
+    return commitPerLine(filenames);
+  })
+  .then(function (commitBlame) {
+    var separateCoverage = coveragePerCommit(initialCoverage, commitsById, commitBlame);
+    la(check.object(separateCoverage), 'could not separate coverage per commit', separateCoverage);
+  })
   .then(folders.comeBack)
+  .done(); */
+
+repoToCoverage(gitRepoFolder, 2)
+  .then(console.log)
   .done();
 
 /*
@@ -89,33 +118,6 @@ la(check.object(initialCoverage), 'could not compute initial coverage', jsFiles)
 var blameForFiles = jsFiles.map(function (filename) {
   return ggit.blame(filename);
 });
-
-function codeLinesInFile(filename) {
-  var src = read(filename, 'utf-8');
-  la(check.unemptyString(src), 'could not read file', filename);
-  var instrumented = instrumenter.instrumentSync(src, filename);
-  // console.log('instrumented code');
-  // console.log(instrumented);
-  var coverage = instrumenter.lastFileCoverage();
-
-  // remove branch and function coverage
-  coverage.f = {};
-  coverage.b = {};
-  coverage.fnMap = {};
-
-  return coverage;
-}
-
-function totalCoverage(filenames) {
-  la(check.arrayOfStrings(filenames), 'expected array of filenames', filenames);
-  var coverage = {};
-  filenames.forEach(function (name) {
-    var fileCoverage = codeLinesInFile(name);
-    la(check.object(fileCoverage), 'could not get code coverage for', name);
-    coverage[name] = fileCoverage;
-  });
-  return coverage;
-}
 
 function reportCoverage(coverage, commitId, update) {
   la(check.maybe.unemptyString(commitId), 'commit id should be a string', commitId);
@@ -162,24 +164,6 @@ function modifiedLinesForCommit(blames, commitId) {
   return n;
 }
 
-function isLineInCommit(commitId, filename, blames, lineNumber) {
-  la(check.unemptyString(commitId), 'expected commit id', commitId);
-  la(check.positiveNumber(lineNumber), 'expected line number', lineNumber);
-
-  var blameForFile = blames[filename];
-  if (!blameForFile) {
-    return false;
-  }
-
-  la(check.array(blameForFile), 'expected line info for file', filename);
-
-  var blameInfoForLine = blameForFile[lineNumber - 1];
-  la(check.object(blameInfoForLine), 'could not get blame info for file', filename,
-    'line', lineNumber);
-  la(check.unemptyString(blameInfoForLine.commit), blameInfoForLine);
-  return blameInfoForLine.commit === commitId;
-}
-
 function modifiedLineNumberPerCommit(info) {
   la(check.object(info.commits));
   var ids = Object.keys(info.commits);
@@ -197,55 +181,6 @@ function modifiedLineNumberPerCommit(info) {
   console.table('modified lines', modified);
 }
 
-function leaveModifiedStatements(commitId, coverage, filesBlame) {
-  _.forEach(filesBlame, function (lines, filename) {
-    var fileCoverage = coverage[filename];
-    if (!fileCoverage) {
-      return;
-    }
-
-    var notCovered = [];
-
-    _.forEach(fileCoverage.s, function (bit, s) {
-      var statementMap = fileCoverage.statementMap[s];
-      var coveredLines = {
-        start: statementMap.start.line,
-        end: statementMap.end.line
-      };
-      la(check.positiveNumber(coveredLines.start), 'missing start line', statementMap);
-      la(check.positiveNumber(coveredLines.end), 'missing end line', statementMap);
-      la(coveredLines.end >= coveredLines.start, 'invalid start and end lines', statementMap);
-
-      var k, statementInCommit = false;
-      for (k = coveredLines.start; k <= coveredLines.end; k += 1) {
-        var lineInCommit = isLineInCommit(commitId, filename, filesBlame, k);
-        if (lineInCommit) {
-          statementInCommit = true;
-        }
-      }
-      // console.log(filename, 'statement', s, 'was coveraged?', Boolean(bit), 'in this commit?', statementInCommit);
-      if (!statementInCommit) {
-        notCovered.push(s);
-      }
-    });
-
-    // console.log('removing statement coverage', notCovered);
-    notCovered.forEach(function removeStatementCoverage(id) {
-      delete fileCoverage.s[id];
-      delete fileCoverage.statementMap[id];
-    });
-  });
-}
-
-function modifiedCoveragePerCommit(info) {
-  var ids = Object.keys(info.commits);
-  ids.forEach(function (commitId) {
-    console.log('processing commit', commitId);
-    var commitCoverage = _.cloneDeep(initialCoverage);
-    leaveModifiedStatements(commitId, commitCoverage, info.files);
-    reportCoverage(commitCoverage, commitId);
-  });
-}
 */
 
 // compute per-commit coverage for foo-bar-baz project
