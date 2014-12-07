@@ -20,6 +20,7 @@ var folders = require('./src/folder');
 var commits = require('./src/commits');
 var sourceFiles = require('./src/js-source-files');
 var commitPerLine = require('./src/commit-per-line');
+var fileCoverage = require('./src/file-coverage');
 
 var gitRepoFolder = '../foo-bar-baz';
 /*
@@ -56,10 +57,21 @@ sourceFiles(gitRepoFolder)
 */
 
 // find commit responsible for each line in the found source files
+/*
 folders.to(gitRepoFolder)
   .then(d3h.hermit(sourceFiles))
   .tap(console.log)
   .then(commitPerLine)
+  .then(console.log)
+  .then(folders.comeBack)
+  .done();
+*/
+
+var initialCoverage;
+
+folders.to(gitRepoFolder)
+  .then(d3h.hermit(sourceFiles))
+  .then(fileCoverage)
   .then(console.log)
   .then(folders.comeBack)
   .done();
