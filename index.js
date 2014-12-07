@@ -1,3 +1,5 @@
+require('q').longStackSupport = true;
+
 require('lazy-ass');
 var check = require('check-more-types');
 var ggit = require('ggit');
@@ -13,7 +15,10 @@ var Collector = istanbul.Collector;
 var instrumenter = new istanbul.Instrumenter();
 var read = require('fs').readFileSync;
 
+var folders = require('./src/folder');
+
 var gitRepoFolder = '../foo-bar-baz';
+/*
 var currentFolder;
 
 function toFolder(folder) {
@@ -24,7 +29,13 @@ function toFolder(folder) {
   return current;
 }
 currentFolder = toFolder(gitRepoFolder);
+*/
 
+folders.to(gitRepoFolder)
+  .then(folders.comeBack)
+  .done();
+
+/*
 var glob = require('glob');
 var jsFiles = glob.sync('*.js');
 console.log('found js files');
@@ -46,18 +57,11 @@ function codeLinesInFile(filename) {
   // console.log(instrumented);
   var coverage = instrumenter.lastFileCoverage();
 
-  // remove branches, functions, statements
+  // remove branch and function coverage
   coverage.f = {};
   coverage.b = {};
   coverage.fnMap = {};
 
-  /*
-  console.log('last coverage');
-  console.log(coverage);
-
-  reportCoverage({
-    filename: coverage
-  });*/
   return coverage;
 }
 
@@ -201,6 +205,7 @@ function modifiedCoveragePerCommit(info) {
     reportCoverage(commitCoverage, commitId);
   });
 }
+*/
 
 // compute per-commit coverage for foo-bar-baz project
 /*
@@ -238,7 +243,7 @@ ggit.blame('./app.js').then(function (blames) {
 */
 
 // codeLinesInFile('./app.js');
-
+/*
 var updatedCoverageFilename = join(__dirname, '../html-report/coverage.json');
 la(fs.existsSync(updatedCoverageFilename),
   'cannot find updated coverage', updatedCoverageFilename);
@@ -281,3 +286,4 @@ function updateCommitCoverageFolder(updatedCoverage, commitFolder) {
   reportCoverage(initialCoverage, commitId, true);
 }
 commitFolders.forEach(_.partial(updateCommitCoverageFolder, updatedCoverage));
+*/
