@@ -14,10 +14,12 @@ var istanbul = require('istanbul');
 var Collector = istanbul.Collector;
 var instrumenter = new istanbul.Instrumenter();
 var read = require('fs').readFileSync;
+var d3h = require('d3-helpers');
 
 var folders = require('./src/folder');
 var commits = require('./src/commits');
 var sourceFiles = require('./src/js-source-files');
+var commitPerLine = require('./src/commit-per-line');
 
 var gitRepoFolder = '../foo-bar-baz';
 /*
@@ -52,6 +54,15 @@ sourceFiles(gitRepoFolder)
   .then(console.log)
   .done();
 */
+
+// find commit responsible for each line in the found source files
+folders.to(gitRepoFolder)
+  .then(d3h.hermit(sourceFiles))
+  .tap(console.log)
+  .then(commitPerLine)
+  .then(console.log)
+  .then(folders.comeBack)
+  .done();
 
 /*
 var glob = require('glob');
