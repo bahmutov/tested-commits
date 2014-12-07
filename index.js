@@ -17,6 +17,7 @@ var read = require('fs').readFileSync;
 
 var folders = require('./src/folder');
 var commits = require('./src/commits');
+var sourceFiles = require('./src/js-source-files');
 
 var gitRepoFolder = '../foo-bar-baz';
 /*
@@ -38,11 +39,19 @@ folders.to(gitRepoFolder)
   .then(folders.comeBack)
   .done();*/
 
-commits(gitRepoFolder)
+/*
+commits.all(gitRepoFolder)
   .then(R.take(2))
-  .then(console.table)
+  .then(commits.byId)
+  .then(console.log)
   .done();
+*/
 
+/*
+sourceFiles(gitRepoFolder)
+  .then(console.log)
+  .done();
+*/
 
 /*
 var glob = require('glob');
