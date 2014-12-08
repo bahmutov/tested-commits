@@ -101,7 +101,7 @@ commits.all(gitRepoFolder)
   .then(folders.comeBack)
   .done(); */
 
-repoToCoverage(gitRepoFolder, 2)
+repoToCoverage(gitRepoFolder, R.take(2))
   .then(console.log)
   .done();
 

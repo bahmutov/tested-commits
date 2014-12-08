@@ -10,15 +10,15 @@ var commitPerLine = require('./commit-per-line');
 var fileCoverage = require('./file-coverage');
 var coveragePerCommit = require('./coverage-per-commit');
 
-function repoToSeparateCoverage(folder, maxCommits) {
-  if (!maxCommits) {
-    maxCommits = 100;
+function repoToSeparateCoverage(folder, commitFilter) {
+  if (!commitFilter) {
+    commitFilter = R.take(100);
   }
 
   var filenames, commitsById, initialCoverage;
 
   return commits.all(folder)
-    .then(R.take(maxCommits))
+    .then(commitFilter)
     .then(commits.byId)
     .then(function (c) {
       commitsById = c;
@@ -49,4 +49,4 @@ function repoToSeparateCoverage(folder, maxCommits) {
 
 module.exports = check.defend(repoToSeparateCoverage,
   check.unemptyString, 'need git repo folder name',
-  check.maybe.positiveNumber, 'need max number of commits');
+  check.maybe.fn, 'need commit filter function');
