@@ -4,10 +4,16 @@ var check = require('check-more-types');
 var q = require('q');
 var R = require('ramda');
 
+function toArray(x) {
+  return Array.isArray(x) ? x : [x];
+}
+
 function zipBlames(filenames, blames) {
   la(check.array(blames), 'blame info', blames);
   console.log('found blame info for', blames.length, 'files');
-  var fileBlame = R.zipObj(filenames, blames);
+
+  var lineBlames = blames.map(toArray);
+  var fileBlame = R.zipObj(filenames, lineBlames);
   return fileBlame;
 }
 

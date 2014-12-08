@@ -11,7 +11,7 @@ function isLineInCommit(commitId, filename, blames, lineNumber) {
     return false;
   }
 
-  la(check.array(blameForFile), 'expected line info for file', filename);
+  la(check.array(blameForFile), 'expected line info for file', filename, 'got', blameForFile);
 
   var blameInfoForLine = blameForFile[lineNumber - 1];
   la(check.object(blameInfoForLine), 'could not get blame info for file', filename,
