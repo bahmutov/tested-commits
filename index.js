@@ -28,7 +28,7 @@ if (options.reset) {
   }
 
   la(check.fn(options.commits), 'missing commits filter function', options);
-  repoToCoverage(options.repo, options.commits)
+  repoToCoverage(options.repo, options.commits, options.files)
     // .tap(console.log)
     .then(function (separateCoverage) {
       check.object(separateCoverage, 'missing separate coverage', separateCoverage);

@@ -20,6 +20,15 @@ function processOptions(options) {
     options.coverage = join(options.repo, options.coverage);
   }
 
+  if (!options.files) {
+    options.files = R.alwaysTrue;
+  } else {
+    var filesFilter = new RegExp(options.files);
+    options.files = function (filename) {
+      return filesFilter.test(filename);
+    };
+  }
+
   return options;
 }
 
@@ -52,8 +61,13 @@ function cliOptions() {
     })
     .option('coverage', {
       string: true,
-      alias: 'f',
+      alias: 'x',
       description: 'path to JSON coverage file to use'
+    })
+    .option('files', {
+      string: true,
+      alias: 'f',
+      description: 'filter input files expression'
     })
     .usage(info)
     .argv;

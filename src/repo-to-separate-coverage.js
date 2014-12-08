@@ -10,12 +10,22 @@ var commitPerLine = require('./commit-per-line');
 var fileCoverage = require('./file-coverage');
 var coveragePerCommit = require('./coverage-per-commit');
 
-function repoToSeparateCoverage(folder, commitFilter) {
+function repoToSeparateCoverage(folder, commitFilter, filenameFilter) {
   if (!commitFilter) {
     commitFilter = R.take(100);
   }
+  if (!filenameFilter) {
+    filenameFilter = R.alwaysTrue;
+  }
 
-  var filenames, commitsById, initialCoverage;
+  var filenames;
+  function filterFiles(names) {
+    la(check.arrayOfStrings(names), 'could not find filenames', names);
+    filenames = names.filter(filenameFilter);
+    return filenames;
+  }
+
+  var commitsById, initialCoverage;
 
   return commits.all(folder)
     .then(commitFilter)
@@ -26,11 +36,7 @@ function repoToSeparateCoverage(folder, commitFilter) {
     })
     .then(folders.to.bind(null, folder))
     .then(d3h.hermit(sourceFiles))
-    .then(function (names) {
-      la(check.arrayOfStrings(names), 'could not find filenames', names);
-      filenames = names;
-      return filenames;
-    })
+    .then(filterFiles)
     .then(fileCoverage)
     .then(function (coverage) {
       la(check.object(coverage), 'expected initial coverage');
@@ -51,4 +57,5 @@ function repoToSeparateCoverage(folder, commitFilter) {
   to keep only last 2 commits use R.take(2) */
 module.exports = check.defend(repoToSeparateCoverage,
   check.unemptyString, 'need git repo folder name',
-  check.maybe.fn, 'need commit filter function');
+  check.maybe.fn, 'need commit filter function',
+  check.maybe.fn, 'need filename filter function');

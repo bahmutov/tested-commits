@@ -11,6 +11,8 @@ function toArray(x) {
 function zipBlames(filenames, blames) {
   la(check.array(blames), 'blame info', blames);
   console.log('found blame info for', blames.length, 'files');
+  la(check.sameLength(filenames, blames),
+    'mismatch in blame lengths', filenames, blames);
 
   var lineBlames = blames.map(toArray);
   var fileBlame = R.zipObj(filenames, lineBlames);
@@ -22,9 +24,13 @@ function zipBlames(filenames, blames) {
 // to the repo's root
 function commitForEachLine(filenames) {
   var blameForFiles = filenames.map(ggit.blame);
-  return q.all(blameForFiles).then(
-    R.lPartial(zipBlames, filenames)
-  );
+  console.log('blames for', filenames);
+
+  return q.all(blameForFiles)
+    .tap(console.log)
+    .then(
+      R.lPartial(zipBlames, filenames)
+    );
 }
 
 module.exports = check.defend(commitForEachLine,
