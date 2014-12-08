@@ -29,6 +29,7 @@ function repoToSeparateCoverage(folder, commitFilter, filenameFilter) {
 
   return commits.all(folder)
     .then(commitFilter)
+    .tap(console.log)
     .then(commits.byId)
     .then(function (c) {
       commitsById = c;

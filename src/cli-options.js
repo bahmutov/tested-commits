@@ -1,19 +1,43 @@
 var check = require('check-more-types');
+var R = require('ramda');
 var pkg = require('../package.json');
 var info = pkg.name + ' - ' + pkg.description + '\n' +
   '  version: ' + pkg.version + '\n' +
   '  author: ' + JSON.stringify(pkg.author);
 
+function isSmall(s) {
+  return s < 100;
+}
+
 function isJustNumber(s) {
   return check.number(s) || (Number(s).toString() === s);
+}
+
+var isNumberOfCommits = R.allPredicates([isJustNumber, isSmall]);
+
+function isCommitId(s) {
+  return check.commitId(s);
+}
+
+function filterByCommitId(id) {
+  return function (commits) {
+    return commits.filter(function (c) {
+      la(check.object(c), 'expected commit object', c);
+      la(check.has(c, 'id'), 'commit object is missing id property', c);
+      la(check.commitId(c.id), 'invalid commit id', c);
+      return c.id === id;
+    });
+  };
 }
 
 function processOptions(options) {
   var R = require('ramda');
   var join = require('path').join;
 
-  if (isJustNumber(options.commits)) {
+  if (isNumberOfCommits(options.commits)) {
     options.commits = R.take(Number(options.commits));
+  } else if (isCommitId(options.commits)) {
+    options.commits = filterByCommitId(options.commits);
   }
 
   if (options.coverage && !check.absolute(options.coverage)) {
