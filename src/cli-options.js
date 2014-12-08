@@ -15,19 +15,21 @@ function isJustNumber(s) {
 
 var isNumberOfCommits = R.allPredicates([isJustNumber, isSmall]);
 
-function isCommitId(s) {
-  return check.commitId(s);
-}
-
-function filterByCommitId(id) {
+function filterByCommitId(id, comparison) {
   return function (commits) {
     return commits.filter(function (c) {
       la(check.object(c), 'expected commit object', c);
       la(check.has(c, 'id'), 'commit object is missing id property', c);
       la(check.commitId(c.id), 'invalid commit id', c);
-      return c.id === id;
+      return comparison(c.id, id);
     });
   };
+}
+
+function startsWith(start, s) {
+  la(check.unemptyString(s), 'missing full string', arguments);
+  la(check.unemptyString(start), 'missing start string', arguments);
+  return s.indexOf(start) === 0;
 }
 
 function processOptions(options) {
@@ -36,8 +38,11 @@ function processOptions(options) {
 
   if (isNumberOfCommits(options.commits)) {
     options.commits = R.take(Number(options.commits));
-  } else if (isCommitId(options.commits)) {
-    options.commits = filterByCommitId(options.commits);
+  } else if (check.commitId(options.commits)) {
+    options.commits = filterByCommitId(options.commits, R.eq);
+  } else if (check.shortCommitId(options.commits)) {
+    options.commits = filterByCommitId(options.commits,
+      R.lPartial(startsWith, options.commits));
   }
 
   if (options.coverage && !check.absolute(options.coverage)) {

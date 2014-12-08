@@ -1,4 +1,4 @@
-# tested-commits v0.1.0
+# tested-commits v0.2.0
 
 > JavaScript code coverage split by commit
 
@@ -24,7 +24,7 @@
 
 ```
 tested-commits - JavaScript code coverage split by commit
-  version: 0.1.0
+  version: 0.2.0
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:
@@ -36,6 +36,17 @@ Options:
   --files, -f     filter input files expression
 
 ```
+
+### Selecting commits
+
+You can pick commits to track coverage for using `--coverage` option.
+
+* `--coverage <N>` picks last N commits to look at
+* `--coverage <SHA-1>` picks commit with full SHA id (40 hex characters)
+* `--coverage <short SHA-1>` picks commit with short SHA id (7 hex characters), usually
+displayed when you call `git log --oneline` inside a repo.
+
+
 
 ### Small print
 

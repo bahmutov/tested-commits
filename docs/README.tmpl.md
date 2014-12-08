@@ -8,6 +8,8 @@
 {%= _.doc("./docs/help.md") %}
 ```
 
+{%= _.doc("./docs/selecting-commits.md") %}
+
 {%= _.doc("./docs/footer.md") %}
 
 ## MIT License

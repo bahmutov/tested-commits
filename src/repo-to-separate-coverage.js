@@ -29,11 +29,10 @@ function repoToSeparateCoverage(folder, commitFilter, filenameFilter) {
 
   return commits.all(folder)
     .then(commitFilter)
-    .tap(console.log)
+    .tap(console.table)
     .then(commits.byId)
     .then(function (c) {
       commitsById = c;
-      console.log('commits by id', commitsById);
     })
     .then(folders.to.bind(null, folder))
     .then(d3h.hermit(sourceFiles))
