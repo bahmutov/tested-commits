@@ -110,37 +110,6 @@ function update() {
   la(false, 'Cannot update split coverage from arguments', arguments);
 }
 
-/*
-function updateSeparateCoverages(updatedCoverage, commitFolder) {
-  la(check.unemptyString(commitFolder), 'missing commit folder');
-  console.log('updating coverage in folder', commitFolder);
-  var initialCommitCoverageFilename = join(commitFolder, 'commit-coverage.json');
-  la(fs.existsSync(initialCommitCoverageFilename), 'cannot find file', initialCommitCoverageFilename);
-  var initialCoverage = JSON.parse(fs.readFileSync(initialCommitCoverageFilename, 'utf-8'));
-  Object.keys(updatedCoverage).forEach(function (coveredFilename) {
-    console.log('covered file', coveredFilename);
-    if (!initialCoverage[coveredFilename]) {
-      return;
-    }
-
-    var updatedFileCoverage = updatedCoverage[coveredFilename];
-    Object.keys(updatedFileCoverage.s).forEach(function (statementId) {
-      var covered = updatedFileCoverage.s[statementId];
-      if (covered) {
-        if (check.has(initialCoverage[coveredFilename].s, statementId)) {
-          initialCoverage[coveredFilename].s[statementId] = covered;
-        }
-      }
-    });
-  });
-
-  var commitId = commitFolder.replace(/^.*commit\_/, '');
-  la(check.unemptyString(commitId), 'could not find commit id', commitFolder);
-  reportCoverage(initialCoverage, commitId, true);
-}
-commitFolders.forEach(_.partial(updateCommitCoverageFolder, updatedCoverage));
-*/
-
 module.exports = update;
 
 /* takes separate coverages by commit id and updates them with new test coverage info */
