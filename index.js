@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require('q').longStackSupport = true;
 
 require('lazy-ass');
