@@ -46,6 +46,6 @@ if (options.reset) {
 if (options.coverage) {
   console.log('updating split coverage from', options.coverage);
 
-  updateCoverage(options.coverage);
+  updateCoverage(options.coverage, options.repo);
 }
 

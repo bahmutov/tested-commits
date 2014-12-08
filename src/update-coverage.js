@@ -8,6 +8,7 @@ var exists = fs.existsSync;
 var _ = require('lodash');
 var R = require('ramda');
 var reportCoverage = require('./report-coverage');
+var config = require('./config')();
 
 function findCoverage(coverage, path) {
   la(check.absolute(path), 'expected absolute path to search for', path);
@@ -45,9 +46,15 @@ function updateCoverage(initial, updated) {
 
 function updateCommitCoverage(combinedCoverage, commitId) {
   la(check.commitId(commitId), 'expected commit id', commitId);
-  var filename = join(process.cwd(), 'commits', commitId, 'commit-coverage.json');
+  var commitFolder = join(process.cwd(), config.commitsFolder, commitId);
+  var filename = join(commitFolder, config.latestCommitCoverageFilename);
+  if (!exists(filename)) {
+    filename = join(commitFolder, config.initialCommitCoverageFilename);
+  }
+
   if (!exists(filename)) {
     console.log('cannot find individual commit coverage file', filename);
+    return;
   }
 
   console.log('updating split coverage for commit', commitId);
@@ -67,7 +74,7 @@ function getDirectories(srcpath) {
 }
 
 function updateSplitCoverages(updatedCoverage) {
-  var commitsFolder = join(process.cwd(), 'commits');
+  var commitsFolder = join(process.cwd(), config.commitsFolder);
   la(exists(commitsFolder), 'cannot find folder', commitsFolder);
   var ids = getDirectories(commitsFolder);
   la(check.arrayOfStrings(ids), 'expected subfolders');
@@ -84,13 +91,17 @@ function isCoverageJsonFilename(arg) {
     path.extname(arg.toLowerCase()) === '.json';
 }
 
-function updateSplitCoverageFromFile(filename) {
+function isFolder(arg) {
+  return exists(arg) &&
+    fs.statSync(arg).isDirectory();
+}
+
+function updateSplitCoverageFromRepo(filename, baseFolder) {
   la(check.unemptyString(filename) && exists(filename),
     'cannot find coverage file', filename);
   var coverage = JSON.parse(read(filename, 'utf-8'));
   la(check.object(coverage), 'could not read coverage from file', filename);
 
-  var baseFolder = path.dirname(filename);
   R.values(coverage).forEach(function (fileCoverage) {
     la(check.has(fileCoverage, 'path'),
       'cannot find path property in file coverage', fileCoverage, 'in file', filename);
@@ -102,9 +113,23 @@ function updateSplitCoverageFromFile(filename) {
   return updateSplitCoverages(coverage);
 }
 
+function updateSplitCoverageFromFile(filename) {
+  return updateSplitCoverageFromRepo(filename, path.dirname(filename));
+}
+
 function update() {
-  if (arguments.length === 1 && isCoverageJsonFilename(arguments[0])) {
-    return updateSplitCoverageFromFile(arguments[0]);
+  switch (arguments.length) {
+    case 1:
+      if (isCoverageJsonFilename(arguments[0])) {
+        return updateSplitCoverageFromFile(arguments[0]);
+      }
+    break;
+    case 2:
+      if (isCoverageJsonFilename(arguments[0]) &&
+        isFolder(arguments[1])) {
+        return updateSplitCoverageFromRepo(arguments[0], arguments[1]);
+      }
+    break;
   }
 
   la(false, 'Cannot update split coverage from arguments', arguments);

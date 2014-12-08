@@ -38,7 +38,7 @@ function reportCoverage(coverage, commitId, update) {
   htmlReport.writeReport(collector, true);
 
   var coverageFilename = join(fullDir,
-    update ? 'updated-coverage.json' : 'commit-coverage.json');
+    update ? config.latestCommitCoverageFilename : config.initialCommitCoverageFilename);
   fs.writeFileSync(coverageFilename, JSON.stringify(coverage, null, 2), 'utf-8');
 }
 

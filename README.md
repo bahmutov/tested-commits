@@ -1,4 +1,4 @@
-# tested-commits v0.0.0
+# tested-commits v0.1.0
 
 > JavaScript code coverage split by commit
 
@@ -24,7 +24,7 @@
 
 ```
 tested-commits - JavaScript code coverage split by commit
-  version: 0.0.0
+  version: 0.1.0
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:
@@ -32,7 +32,8 @@ Options:
   --repo          git repo path                                  [default: "."]
   --reset, -r     erase previously collected coverage            [default: false]
   --commits, -c   commit filter, for example pick last two -c 2  [default: 5]
-  --coverage, -f  path to JSON coverage file to use
+  --coverage, -x  path to JSON coverage file to use            
+  --files, -f     filter input files expression
 
 ```
 
