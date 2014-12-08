@@ -27,6 +27,7 @@ var coveragePerCommit = require('./src/coverage-per-commit');
 var repoToCoverage = require('./src/repo-to-separate-coverage');
 var reportCoverage = require('./src/report-coverage');
 var initialCoverage = require('./src/initial-coverage');
+var updateCoverage = require('./src/update-coverage');
 
 var gitRepoFolder = '../foo-bar-baz';
 /*
@@ -91,6 +92,9 @@ initialCoverage(gitRepoFolder)
   })
   .done();
 */
+
+updateCoverage({});
+
 
 // codeLinesInFile('./app.js');
 /*
