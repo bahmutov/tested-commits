@@ -2,6 +2,8 @@ require('q').longStackSupport = true;
 
 require('lazy-ass');
 var check = require('check-more-types');
+require('./src/commit-id');
+
 var ggit = require('ggit');
 var q = require('q');
 var R = require('ramda');
@@ -69,38 +71,6 @@ folders.to(gitRepoFolder)
   .done();
 */
 
-/*
-var filenames, commitsById, initialCoverage;
-
-commits.all(gitRepoFolder)
-  .then(R.take(2))
-  .then(commits.byId)
-  .then(function (c) {
-    commitsById = c;
-    console.log('commits by id', commitsById);
-  })
-  .then(folders.to.bind(null, gitRepoFolder))
-  .then(d3h.hermit(sourceFiles))
-  .then(function (names) {
-    la(check.arrayOfStrings(names), 'could not find filenames', names);
-    filenames = names;
-    return filenames;
-  })
-  .then(fileCoverage)
-  .then(function (coverage) {
-    la(check.object(coverage), 'expected initial coverage');
-    initialCoverage = coverage;
-  })
-  .then(function () {
-    return commitPerLine(filenames);
-  })
-  .then(function (commitBlame) {
-    var separateCoverage = coveragePerCommit(initialCoverage, commitsById, commitBlame);
-    la(check.object(separateCoverage), 'could not separate coverage per commit', separateCoverage);
-  })
-  .then(folders.comeBack)
-  .done(); */
-
 repoToCoverage(gitRepoFolder, R.take(2))
   .then(console.log)
   .done();
@@ -144,78 +114,6 @@ function reportCoverage(coverage, commitId, update) {
     update ? 'updated-coverage.json' : 'commit-coverage.json');
   fs.writeFileSync(coverageFilename, JSON.stringify(coverage, null, 2), 'utf-8');
 }
-
-function modifiedLinesForCommit(blames, commitId) {
-  la(check.unemptyString(commitId), 'expected commit id');
-  // console.log(blames);
-  var n = 0;
-  _.forEach(blames, function (lines, filename) {
-    // console.log('lines');
-    // console.log(lines);
-
-    la(check.array(lines), 'expected line info for file', filename);
-    lines.forEach(function (blame) {
-      la(check.unemptyString(blame.commit), blame);
-      if (blame.commit === commitId) {
-        n += 1;
-      }
-    });
-  });
-  return n;
-}
-
-function modifiedLineNumberPerCommit(info) {
-  la(check.object(info.commits));
-  var ids = Object.keys(info.commits);
-  var ns = _.map(ids, _.partial(modifiedLinesForCommit, info.files));
-
-  console.log('modified lines per commit');
-  console.log(ns);
-
-  var modified = {};
-
-  ids.forEach(function (id, k) {
-    modified[id] = ns[k];
-  });
-  console.table('commits', info.commits);
-  console.table('modified lines', modified);
-}
-
-*/
-
-// compute per-commit coverage for foo-bar-baz project
-/*
-ggit.getOneLineLog().then(function (commits) {
-  la(check.array(commits), 'commits', commits);
-  console.log('found', commits.length, 'commits');
-
-  var ids = R.map(R.prop('id'))(commits);
-  var messages = R.map(R.prop('message'))(commits);
-  var commitInfo = R.zipObj(ids, messages);
-
-  return q.all(blameForFiles).then(function (blames) {
-    la(check.array(blames), 'blame info', blames);
-    console.log('found blame info for', blames.length, 'files');
-
-    var fileBlame = R.zipObj(jsFiles, blames);
-
-    // console.log(blames);
-    return {
-      commits: commitInfo,
-      files: fileBlame
-    };
-  });
-
-}).then(modifiedCoveragePerCommit)
-.finally(function () {
-  process.chdir(currentFolder);
-}).done();
-*/
-
-/*
-ggit.blame('./app.js').then(function (blames) {
-  console.log(blames);
-}).done();
 */
 
 // codeLinesInFile('./app.js');

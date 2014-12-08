@@ -2,11 +2,6 @@ require('lazy-ass');
 var check = require('check-more-types');
 var _ = require('lodash');
 
-// 3b819803cdf2225ca1338beb17e0c506fdeedefc
-function isCommitId(id) {
-  return check.string(id) && id.length === 40;
-}
-
 function isLineInCommit(commitId, filename, blames, lineNumber) {
   la(check.unemptyString(commitId), 'expected commit id', commitId);
   la(check.positiveNumber(lineNumber), 'expected line number', lineNumber);
@@ -67,7 +62,7 @@ function leaveModifiedStatements(commitId, coverage, filesBlame) {
 
 function coveragePerCommit(coverage, commits, commitsPerLine) {
   var ids = Object.keys(commits);
-  la(ids.every(isCommitId), 'expected commit ids', ids);
+  la(ids.every(check.commitId), 'expected commit ids', ids);
 
   var commitIdToCoverage = {};
   ids.forEach(function (commitId) {

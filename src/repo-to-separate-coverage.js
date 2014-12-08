@@ -47,6 +47,8 @@ function repoToSeparateCoverage(folder, commitFilter) {
     .tap(folders.comeBack);
 }
 
+/* optional argument is a filter on commits, newest first, for example
+  to keep only last 2 commits use R.take(2) */
 module.exports = check.defend(repoToSeparateCoverage,
   check.unemptyString, 'need git repo folder name',
   check.maybe.fn, 'need commit filter function');
