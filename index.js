@@ -4,7 +4,6 @@ require('lazy-ass');
 var check = require('check-more-types');
 require('./src/commit-id');
 require('console.table');
-var join = require('path').join;
 
 var options = require('./src/cli-options')();
 la(check.object(options), 'could not get cli options', options);
@@ -17,15 +16,23 @@ var updateCoverage = require('./src/update-coverage');
 la(check.unemptyString(options.repo), 'missing git repo path', options);
 
 // either compute initial split coverage
-repoToCoverage(options.repo, R.take(3))
-  // .tap(console.log)
-  .then(function (separateCoverage) {
-    check.object(separateCoverage, 'missing separate coverage', separateCoverage);
-    reportCoverage(separateCoverage, false);
-  })
-  .done();
+if (options.reset) {
+  console.log('resetting split commits in', options.repo);
+
+  la(check.fn(options.commits), 'missing commits filter function', options);
+  repoToCoverage(options.repo, options.commits)
+    // .tap(console.log)
+    .then(function (separateCoverage) {
+      check.object(separateCoverage, 'missing separate coverage', separateCoverage);
+      reportCoverage(separateCoverage, false);
+    })
+    .done();
+}
 
 // or update prepared split coverage
+if (options.coverage) {
+  console.log('updating split coverage from', options.coverage);
 
-// updateCoverage(join(gitRepoFolder, 'coverage.json'));
+  updateCoverage(options.coverage);
+}
 
