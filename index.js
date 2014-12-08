@@ -26,6 +26,7 @@ var fileCoverage = require('./src/file-coverage');
 var coveragePerCommit = require('./src/coverage-per-commit');
 var repoToCoverage = require('./src/repo-to-separate-coverage');
 var reportCoverage = require('./src/report-coverage');
+var initialCoverage = require('./src/initial-coverage');
 
 var gitRepoFolder = '../foo-bar-baz';
 /*
@@ -72,13 +73,24 @@ folders.to(gitRepoFolder)
   .done();
 */
 
+/*
 repoToCoverage(gitRepoFolder, R.take(2))
   // .tap(console.log)
   .then(function (separateCoverage) {
     check.object(separateCoverage, 'missing separate coverage', separateCoverage);
     reportCoverage(separateCoverage, false);
   })
+  .done();*/
+
+/*
+var initialCover;
+initialCoverage(gitRepoFolder)
+  .tap(console.log)
+  .then(function (coverage) {
+    initialCover = coverage;
+  })
   .done();
+*/
 
 // codeLinesInFile('./app.js');
 /*
