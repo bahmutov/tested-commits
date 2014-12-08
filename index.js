@@ -19,6 +19,11 @@ var config = require('./src/config')();
 la(check.unemptyString(options.repo), 'missing git repo path', options);
 
 // either compute initial split coverage
+if (options.reset && options.coverage) {
+  console.error('Please reset coverage separately from updating it.');
+  process.exit(1);
+}
+
 if (options.reset) {
   console.log('resetting split commits in', options.repo);
 
