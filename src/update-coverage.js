@@ -7,6 +7,7 @@ var read = fs.readFileSync;
 var exists = fs.existsSync;
 var _ = require('lodash');
 var R = require('ramda');
+var q = require('q');
 var reportCoverage = require('./report-coverage');
 var config = require('./config')();
 
@@ -91,26 +92,40 @@ function isCoverageJsonFilename(arg) {
     path.extname(arg.toLowerCase()) === '.json';
 }
 
+function isRemoteUrl(x) {
+  return check.unemptyString(x) &&
+    (check.webUrl(x) || /^localhost/.test(x) || /^127\.0\.0\.1/.test(x));
+}
+
 function isFolder(arg) {
   return exists(arg) &&
     fs.statSync(arg).isDirectory();
 }
 
-function updateSplitCoverageFromRepo(filename, baseFolder) {
-  la(check.unemptyString(filename) && exists(filename),
-    'cannot find coverage file', filename);
-  var coverage = JSON.parse(read(filename, 'utf-8'));
-  la(check.object(coverage), 'could not read coverage from file', filename);
+function getCoverage(filename) {
+  la(check.unemptyString(filename), 'expected filename', arguments);
+  return q(JSON.parse(read(filename, 'utf-8')));
+}
 
+function splitCoverage(baseFolder, coverage) {
+  la(check.object(coverage), 'expected coverage object', coverage);
   R.values(coverage).forEach(function (fileCoverage) {
     la(check.has(fileCoverage, 'path'),
-      'cannot find path property in file coverage', fileCoverage, 'in file', filename);
+      'cannot find path property in file coverage', fileCoverage);
 
     if (!check.absolute(fileCoverage.path)) {
       fileCoverage.path = path.resolve(baseFolder, fileCoverage.path);
     }
   });
   return updateSplitCoverages(coverage);
+}
+
+function updateSplitCoverageFromRepo(filename, baseFolder) {
+  la(check.unemptyString(filename) && exists(filename),
+    'cannot find coverage file', filename);
+
+  return getCoverage(filename)
+    .then(R.lPartial(splitCoverage, baseFolder));
 }
 
 function updateSplitCoverageFromFile(filename) {
@@ -120,12 +135,12 @@ function updateSplitCoverageFromFile(filename) {
 function update() {
   switch (arguments.length) {
     case 1:
-      if (isCoverageJsonFilename(arguments[0])) {
+      if (isRemoteUrl(arguments[0]) || isCoverageJsonFilename(arguments[0])) {
         return updateSplitCoverageFromFile(arguments[0]);
       }
     break;
     case 2:
-      if (isCoverageJsonFilename(arguments[0]) &&
+      if ((isRemoteUrl(arguments[0]) || isCoverageJsonFilename(arguments[0])) &&
         isFolder(arguments[1])) {
         return updateSplitCoverageFromRepo(arguments[0], arguments[1]);
       }
