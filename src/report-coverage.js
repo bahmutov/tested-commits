@@ -41,15 +41,23 @@ function reportCoverage(coverage, commitId, update) {
 }
 
 function reportSeparateCoverage(coverageByCommitId, update) {
+  la(check.object(coverageByCommitId), 'need split coverage object', coverageByCommitId);
+  la(check.maybe.bool(update), 'expected optional bool flag', update);
+
   R.keys(coverageByCommitId)
     .map(function (id) {
       reportCoverage(coverageByCommitId[id], id, update);
     });
 }
 
-module.exports = check.defend(reportSeparateCoverage,
-  check.object, 'need separate coverage object',
-  check.maybe.bool, 'expected optional bool flag');
+function report() {
+  if (arguments.length >= 2 && check.commitId(arguments[1])) {
+    return reportCoverage.apply(null, arguments);
+  }
+  return reportSeparateCoverage.apply(null, arguments);
+}
+
+module.exports = report;
 
 /*
   Example grab last 2 commits, split coverage and save HTML report for each commit

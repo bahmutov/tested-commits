@@ -7,6 +7,7 @@ var read = fs.readFileSync;
 var exists = fs.existsSync;
 var _ = require('lodash');
 var R = require('ramda');
+var reportCoverage = require('./report-coverage');
 
 function findCoverage(coverage, path) {
   la(check.absolute(path), 'expected absolute path to search for', path);
@@ -28,16 +29,15 @@ function updateCoverage(initial, updated) {
       return;
     }
 
-    /*
-    var updatedFileCoverage = updatedCoverage[coveredFilename];
+    var updatedFileCoverage = updated[updatedName];
     Object.keys(updatedFileCoverage.s).forEach(function (statementId) {
       var covered = updatedFileCoverage.s[statementId];
       if (covered) {
-        if (check.has(initialCoverage[coveredFilename].s, statementId)) {
-          initialCoverage[coveredFilename].s[statementId] = covered;
+        if (check.has(fileCoverage.s, statementId)) {
+          fileCoverage.s[statementId] = covered;
         }
       }
-    });*/
+    });
   });
 
   return modified;
@@ -53,7 +53,11 @@ function updateCommitCoverage(combinedCoverage, commitId) {
   console.log('updating split coverage for commit', commitId);
 
   var initialCoverage = JSON.parse(read(filename, 'utf-8'));
-  return updateCoverage(initialCoverage, combinedCoverage);
+  var modified = updateCoverage(initialCoverage, combinedCoverage);
+  la(check.object(modified), 'could not get modified coverage for commit', commitId);
+  la(modified !== initialCoverage, 'we should not modify initial coverage for commit', commitId);
+
+  reportCoverage(modified, commitId, true);
 }
 
 function getDirectories(srcpath) {
