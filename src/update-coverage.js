@@ -8,6 +8,11 @@ var exists = fs.existsSync;
 var _ = require('lodash');
 var R = require('ramda');
 
+function findCoverage(coverage, path) {
+  la(check.absolute(path), 'expected absolute path to search for', path);
+  return R.find(R.propEq('path', path))(R.values(coverage));
+}
+
 function updateCoverage(initial, updated) {
   var modified = _.cloneDeep(initial);
   initial = null;
@@ -17,7 +22,8 @@ function updateCoverage(initial, updated) {
     la(check.absolute(updatedPath), 'expected updated path to be absolute', updated[updatedName]);
 
     console.log('updating coverage for file', updatedPath);
-    if (!modified[updatedPath]) {
+    var fileCoverage = findCoverage(modified, updatedPath);
+    if (!fileCoverage) {
       console.log('  no initial coverage for file', updatedPath);
       return;
     }
@@ -44,6 +50,8 @@ function updateCommitCoverage(combinedCoverage, commitId) {
     console.log('cannot find individual commit coverage file', filename);
   }
 
+  console.log('updating split coverage for commit', commitId);
+
   var initialCoverage = JSON.parse(read(filename, 'utf-8'));
   return updateCoverage(initialCoverage, combinedCoverage);
 }
@@ -61,8 +69,8 @@ function updateSplitCoverages(updatedCoverage) {
   la(check.arrayOfStrings(ids), 'expected subfolders');
   la(ids.every(check.commitId), 'expected SHA ids as subfolders', ids);
 
-  console.log('updating split coverage for ids');
-  console.log(ids);
+  // console.log('updating split coverage for ids');
+  // console.log(ids);
 
   ids.forEach(R.lPartial(updateCommitCoverage, updatedCoverage));
 }
