@@ -1,4 +1,4 @@
-# tested-commits v0.2.0
+# tested-commits v0.3.0
 
 > JavaScript code coverage split by commit
 
@@ -24,7 +24,7 @@
 
 ```
 tested-commits - JavaScript code coverage split by commit
-  version: 0.2.0
+  version: 0.3.0
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:
@@ -45,6 +45,18 @@ You can pick commits to track coverage for using `--commits` option.
 * `--commits <SHA-1>` picks commit with full SHA id (40 hex characters)
 * `--commits <short SHA-1>` picks commit with short SHA id (7 hex characters), usually
 displayed when you call `git log --oneline` inside a repo.
+
+
+
+### Selecting coverage
+
+You can update current coverage from a file or url. Just make sure
+the coverage JSON was generated using [istanbul](https://www.npmjs.org/package/istanbul).
+Some tools that use istanbul are [Karma](https://www.npmjs.org/package/karma), 
+[gt](https://github.com/bahmutov/gt) and [was-tested](https://github.com/bahmutov/was-tested).
+
+* `--coverage <path/to/cover.json>` reads file from disk
+* `--coverage <hostname/url/to/coverage>` loads JSON file from given url
 
 
 

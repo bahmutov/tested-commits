@@ -102,9 +102,32 @@ function isFolder(arg) {
     fs.statSync(arg).isDirectory();
 }
 
+function downloadCoverage(url) {
+  if (!/^http/.test(url)) {
+    url = 'http://' + url;
+  }
+  console.log('downloading coverage from', url);
+  var request = require('request');
+  request.debug = true;
+  var defer = q.defer();
+  request.get(url, function (err, response, body) {
+    if (err) {
+      defer.reject(err);
+    }
+    defer.resolve(JSON.parse(body));
+  });
+  return defer.promise;
+}
+
 function getCoverage(filename) {
-  la(check.unemptyString(filename), 'expected filename', arguments);
-  return q(JSON.parse(read(filename, 'utf-8')));
+  console.log('getting coverage from', filename);
+  if (isRemoteUrl(filename)) {
+    return downloadCoverage(filename);
+  } else {
+    la(check.unemptyString(filename), 'expected filename', arguments);
+    la(exists(filename), 'cannot find file', filename);
+    return q(JSON.parse(read(filename, 'utf-8')));
+  }
 }
 
 function splitCoverage(baseFolder, coverage) {
@@ -121,8 +144,7 @@ function splitCoverage(baseFolder, coverage) {
 }
 
 function updateSplitCoverageFromRepo(filename, baseFolder) {
-  la(check.unemptyString(filename) && exists(filename),
-    'cannot find coverage file', filename);
+  la(check.unemptyString(filename), 'cannot find coverage file', filename);
 
   return getCoverage(filename)
     .then(R.lPartial(splitCoverage, baseFolder));

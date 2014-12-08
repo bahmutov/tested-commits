@@ -10,6 +10,8 @@
 
 {%= _.doc("./docs/selecting-commits.md") %}
 
+{%= _.doc("./docs/selecting-coverage.md") %}
+
 {%= _.doc("./docs/footer.md") %}
 
 ## MIT License
