@@ -1,6 +1,40 @@
-# tested-commits
+# tested-commits v0.0.0
 
-> Details coming, follow @bahmutov
+> JavaScript code coverage split by commit
+
+[![NPM][tested-commits-icon] ][tested-commits-url]
+
+[![Build status][tested-commits-ci-image] ][tested-commits-ci-url]
+[![dependencies][tested-commits-dependencies-image] ][tested-commits-dependencies-url]
+[![devdependencies][tested-commits-devdependencies-image] ][tested-commits-devdependencies-url]
+[![Codacy Badge][tested-commits-codacy-image] ][tested-commits-codacy-url]
+
+[tested-commits-icon]: https://nodei.co/npm/tested-commits.png?downloads=true
+[tested-commits-url]: https://npmjs.org/package/tested-commits
+[tested-commits-ci-image]: https://travis-ci.org/bahmutov/tested-commits.png?branch=master
+[tested-commits-ci-url]: https://travis-ci.org/bahmutov/tested-commits
+[tested-commits-dependencies-image]: https://david-dm.org/bahmutov/tested-commits.png
+[tested-commits-dependencies-url]: https://david-dm.org/bahmutov/tested-commits
+[tested-commits-devdependencies-image]: https://david-dm.org/bahmutov/tested-commits/dev-status.png
+[tested-commits-devdependencies-url]: https://david-dm.org/bahmutov/tested-commits#info=devDependencies
+[tested-commits-codacy-image]: https://www.codacy.com/project/badge/a5a2347fd20446dfa100b1535e0183b7
+[tested-commits-codacy-url]: https://www.codacy.com/public/bahmutov/tested-commits.git
+
+
+
+```
+was-tested - Code coverage proxy
+  version: 0.5.1
+  author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
+
+Options:
+  --version, -v     show version and exit                [default: false]
+  --target, -t      target server url                    [default: "http://127.0.0.1:3003"]
+  --port, -p        local proxy port                     [default: 5050]
+  --instrument, -i  instrument url RegExp                [default: "app.js$"]
+  --reset, -r       erase previously collected coverage  [default: false]
+
+```
 
 ### Small print
 
@@ -16,6 +50,8 @@ Spread the word: tweet, star on github, etc.
 
 Support: if you find any problems with this module, email / tweet /
 [open issue](https://github.com/bahmutov/tested-commits/issues) on Github
+
+
 
 ## MIT License
 
@@ -39,3 +75,5 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
