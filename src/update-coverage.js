@@ -88,8 +88,13 @@ function updateSplitCoverageFromFile(filename) {
   la(check.unemptyString(filename) && exists(filename),
     'cannot find coverage file', filename);
   var coverage = JSON.parse(read(filename, 'utf-8'));
+  la(check.object(coverage), 'could not read coverage from file', filename);
+
   var baseFolder = path.dirname(filename);
   R.values(coverage).forEach(function (fileCoverage) {
+    la(check.has(fileCoverage, 'path'),
+      'cannot find path property in file coverage', fileCoverage, 'in file', filename);
+
     if (!check.absolute(fileCoverage.path)) {
       fileCoverage.path = path.resolve(baseFolder, fileCoverage.path);
     }

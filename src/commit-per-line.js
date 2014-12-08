@@ -23,11 +23,23 @@ function zipBlames(filenames, blames) {
 // probably inside git repo folder and filenames are relative
 // to the repo's root
 function commitForEachLine(filenames) {
-  var blameForFiles = filenames.map(ggit.blame);
   console.log('blames for', filenames);
 
-  return q.all(blameForFiles)
-    .tap(console.log)
+  var blamePromises = filenames.map(function (name) {
+    return R.lPartial(ggit.blame, name);
+  });
+
+  var blameInfo = [];
+  function keepBlameInfo(chain, fn) {
+    return chain
+      .then(fn)
+      .then(function (blameForFile) {
+        blameInfo.push(blameForFile);
+      });
+  }
+
+  return blamePromises.reduce(keepBlameInfo, q())
+    .then(R.always(blameInfo))
     .then(
       R.lPartial(zipBlames, filenames)
     );

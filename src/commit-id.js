@@ -11,6 +11,7 @@ check.mixin(isCommitId, 'commitId');
 var resolve = require('path').resolve;
 
 function isAbsolutePath(path) {
+  la(check.unemptyString(path), 'expected path string, got', path);
   return resolve(path) === path;
 }
 
