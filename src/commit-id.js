@@ -7,3 +7,11 @@ function isCommitId(id) {
 }
 
 check.mixin(isCommitId, 'commitId');
+
+var resolve = require('path').resolve;
+
+function isAbsolutePath(path) {
+  return resolve(path) === path;
+}
+
+check.mixin(isAbsolutePath, 'absolute');

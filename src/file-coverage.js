@@ -2,6 +2,7 @@ require('lazy-ass');
 var check = require('check-more-types');
 var R = require('ramda');
 var read = require('fs').readFileSync;
+var resolve = require('path').resolve;
 var istanbul = require('istanbul');
 
 function fileCoverage(filenames) {
@@ -14,10 +15,11 @@ function fileCoverage(filenames) {
 
 function codeLinesInFile(filename) {
   var src = read(filename, 'utf-8');
-  la(check.unemptyString(src), 'could not read file', filename);
+  var fullName = resolve(filename);
+  la(check.unemptyString(src), 'could not read file', fullName);
 
   var instrumenter = new istanbul.Instrumenter();
-  var instrumented = instrumenter.instrumentSync(src, filename);
+  var instrumented = instrumenter.instrumentSync(src, fullName);
   // console.log('instrumented code');
   // console.log(instrumented);
   var coverage = instrumenter.lastFileCoverage();

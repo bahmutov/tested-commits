@@ -25,6 +25,7 @@ var commitPerLine = require('./src/commit-per-line');
 var fileCoverage = require('./src/file-coverage');
 var coveragePerCommit = require('./src/coverage-per-commit');
 var repoToCoverage = require('./src/repo-to-separate-coverage');
+var reportCoverage = require('./src/report-coverage');
 
 var gitRepoFolder = '../foo-bar-baz';
 /*
@@ -72,49 +73,12 @@ folders.to(gitRepoFolder)
 */
 
 repoToCoverage(gitRepoFolder, R.take(2))
-  .then(console.log)
+  // .tap(console.log)
+  .then(function (separateCoverage) {
+    check.object(separateCoverage, 'missing separate coverage', separateCoverage);
+    reportCoverage(separateCoverage, false);
+  })
   .done();
-
-/*
-var glob = require('glob');
-var jsFiles = glob.sync('*.js');
-console.log('found js files');
-console.log(jsFiles.join('\n'));
-
-var initialCoverage = totalCoverage(jsFiles);
-la(check.object(initialCoverage), 'could not compute initial coverage', jsFiles);
-// console.log(initialCoverage['app.js'].statementMap);
-
-var blameForFiles = jsFiles.map(function (filename) {
-  return ggit.blame(filename);
-});
-
-function reportCoverage(coverage, commitId, update) {
-  la(check.maybe.unemptyString(commitId), 'commit id should be a string', commitId);
-
-  // console.log(coverage);
-
-  var collector = new Collector();
-  collector.add(coverage);
-
-  var Report = istanbul.Report;
-
-  var summaryReport = Report.create('text-summary');
-  summaryReport.writeReport(collector);
-
-  var dir = commitId ? 'commit_' + commitId : 'html_report';
-  var fullDir = join(__dirname, dir);
-  console.log('full dir', fullDir);
-  var htmlReport = Report.create('html', {
-    dir: fullDir
-  });
-  htmlReport.writeReport(collector, true);
-
-  var coverageFilename = join(fullDir,
-    update ? 'updated-coverage.json' : 'commit-coverage.json');
-  fs.writeFileSync(coverageFilename, JSON.stringify(coverage, null, 2), 'utf-8');
-}
-*/
 
 // codeLinesInFile('./app.js');
 /*
