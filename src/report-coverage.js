@@ -5,6 +5,7 @@ var Collector = istanbul.Collector;
 var fs = require('fs');
 var R = require('ramda');
 var join = require('path').join;
+var config = require('./config')();
 
 function verifyFileCoverage(fileCoverage) {
   la(check.unemptyString(fileCoverage.path), 'coverage object should have path property', fileCoverage);
@@ -28,7 +29,8 @@ function reportCoverage(coverage, commitId, update) {
   summaryReport.writeReport(collector);
 
   var dir = commitId ? commitId : 'html_report';
-  var fullDir = join(process.cwd(), 'commits', dir);
+  la(check.unemptyString(config.commitsFolder), 'expected commits folder', config);
+  var fullDir = join(process.cwd(), config.commitsFolder, dir);
   console.log('full dir', fullDir);
   var htmlReport = Report.create('html', {
     dir: fullDir

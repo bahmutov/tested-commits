@@ -1,19 +1,19 @@
+var check = require('check-more-types');
 var pkg = require('../package.json');
 var info = pkg.name + ' - ' + pkg.description + '\n' +
   '  version: ' + pkg.version + '\n' +
   '  author: ' + JSON.stringify(pkg.author);
 
 function isJustNumber(s) {
-  return Number(s).toString() === s;
+  return check.number(s) || (Number(s).toString() === s);
 }
 
 function processOptions(options) {
   var R = require('ramda');
-  var check = require('check-more-types');
   var join = require('path').join;
 
   if (isJustNumber(options.commits)) {
-    options.commits = R.take(options.commits);
+    options.commits = R.take(Number(options.commits));
   }
 
   if (options.coverage && !check.absolute(options.coverage)) {
