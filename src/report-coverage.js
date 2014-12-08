@@ -50,3 +50,16 @@ function reportSeparateCoverage(coverageByCommitId, update) {
 module.exports = check.defend(reportSeparateCoverage,
   check.object, 'need separate coverage object',
   check.maybe.bool, 'expected optional bool flag');
+
+/*
+  Example grab last 2 commits, split coverage and save HTML report for each commit
+  separately. Each commit will only show its modified source lines, excluding the other source.
+
+  repoToCoverage(gitRepoFolder, R.take(2))
+    // .tap(console.log)
+    .then(function (separateCoverage) {
+      check.object(separateCoverage, 'missing separate coverage', separateCoverage);
+      reportCoverage(separateCoverage, false);
+    })
+    .done();
+*/
