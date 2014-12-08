@@ -19,7 +19,7 @@ function codeLinesInFile(filename) {
   la(check.unemptyString(src), 'could not read file', fullName);
 
   var instrumenter = new istanbul.Instrumenter();
-  var instrumented = instrumenter.instrumentSync(src, fullName);
+  instrumenter.instrumentSync(src, fullName);
   // console.log('instrumented code');
   // console.log(instrumented);
   var coverage = instrumenter.lastFileCoverage();
