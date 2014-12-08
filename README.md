@@ -23,16 +23,16 @@
 
 
 ```
-was-tested - Code coverage proxy
-  version: 0.5.1
+tested-commits - JavaScript code coverage split by commit
+  version: 0.0.0
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:
-  --version, -v     show version and exit                [default: false]
-  --target, -t      target server url                    [default: "http://127.0.0.1:3003"]
-  --port, -p        local proxy port                     [default: 5050]
-  --instrument, -i  instrument url RegExp                [default: "app.js$"]
-  --reset, -r       erase previously collected coverage  [default: false]
+  --version, -v   show version and exit                          [default: false]
+  --repo          git repo path                                  [default: "."]
+  --reset, -r     erase previously collected coverage            [default: false]
+  --commits, -c   commit filter, for example pick last two -c 2  [default: 5]
+  --coverage, -f  path to JSON coverage file to use
 
 ```
 
