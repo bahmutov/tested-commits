@@ -6,9 +6,10 @@ var join = path.join;
 var read = fs.readFileSync;
 var exists = fs.existsSync;
 var _ = require('lodash');
+var R = require('ramda');
 
 function updateCoverage(initial, updated) {
-  var modified = _.deepClone(initial);
+  var modified = _.cloneDeep(initial);
   initial = null;
 
   Object.keys(updated).forEach(function (updatedName) {
@@ -36,7 +37,7 @@ function updateCoverage(initial, updated) {
   return modified;
 }
 
-function updateCommitCoverage(commitId, combinedCoverage) {
+function updateCommitCoverage(combinedCoverage, commitId) {
   la(check.commitId(commitId), 'expected commit id', commitId);
   var filename = join(process.cwd(), 'commits', commitId, 'commit-coverage.json');
   if (!exists(filename)) {
@@ -53,14 +54,43 @@ function getDirectories(srcpath) {
   });
 }
 
-
-function updateSeparateCoverages(updatedCoverage) {
+function updateSplitCoverages(updatedCoverage) {
   var commitsFolder = join(process.cwd(), 'commits');
   la(exists(commitsFolder), 'cannot find folder', commitsFolder);
   var ids = getDirectories(commitsFolder);
   la(check.arrayOfStrings(ids), 'expected subfolders');
   la(ids.every(check.commitId), 'expected SHA ids as subfolders', ids);
+
+  console.log('updating split coverage for ids');
   console.log(ids);
+
+  ids.forEach(R.lPartial(updateCommitCoverage, updatedCoverage));
+}
+
+function isCoverageJsonFilename(arg) {
+  return check.unemptyString(arg) &&
+    path.extname(arg.toLowerCase()) === '.json';
+}
+
+function updateSplitCoverageFromFile(filename) {
+  la(check.unemptyString(filename) && exists(filename),
+    'cannot find coverage file', filename);
+  var coverage = JSON.parse(read(filename, 'utf-8'));
+  var baseFolder = path.dirname(filename);
+  R.values(coverage).forEach(function (fileCoverage) {
+    if (!check.absolute(fileCoverage.path)) {
+      fileCoverage.path = path.resolve(baseFolder, fileCoverage.path);
+    }
+  });
+  return updateSplitCoverages(coverage);
+}
+
+function update() {
+  if (arguments.length === 1 && isCoverageJsonFilename(arguments[0])) {
+    return updateSplitCoverageFromFile(arguments[0]);
+  }
+
+  la(false, 'Cannot update split coverage from arguments', arguments);
 }
 
 /*
@@ -94,7 +124,6 @@ function updateSeparateCoverages(updatedCoverage, commitFolder) {
 commitFolders.forEach(_.partial(updateCommitCoverageFolder, updatedCoverage));
 */
 
-module.exports = check.defend(updateSeparateCoverages,
-  check.object, 'need updated coverage object');
+module.exports = update;
 
 /* takes separate coverages by commit id and updates them with new test coverage info */

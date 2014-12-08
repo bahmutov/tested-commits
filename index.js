@@ -93,7 +93,7 @@ initialCoverage(gitRepoFolder)
   .done();
 */
 
-updateCoverage({});
+updateCoverage(join(gitRepoFolder, 'coverage.json'));
 
 
 // codeLinesInFile('./app.js');
