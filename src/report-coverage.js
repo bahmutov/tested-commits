@@ -28,7 +28,7 @@ function reportCoverage(coverage, commitId, update) {
   summaryReport.writeReport(collector);
 
   var dir = commitId ? 'commit_' + commitId : 'html_report';
-  var fullDir = join(process.cwd(), dir);
+  var fullDir = join(process.cwd(), 'commits', dir);
   console.log('full dir', fullDir);
   var htmlReport = Report.create('html', {
     dir: fullDir
