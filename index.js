@@ -75,20 +75,21 @@ folders.to(gitRepoFolder)
 */
 
 /*
-repoToCoverage(gitRepoFolder, R.take(2))
-  // .tap(console.log)
-  .then(function (separateCoverage) {
-    check.object(separateCoverage, 'missing separate coverage', separateCoverage);
-    reportCoverage(separateCoverage, false);
-  })
-  .done();*/
-
-/*
 var initialCover;
 initialCoverage(gitRepoFolder)
   .tap(console.log)
   .then(function (coverage) {
     initialCover = coverage;
+  })
+  .done();
+*/
+
+/*
+repoToCoverage(gitRepoFolder, R.take(3))
+  // .tap(console.log)
+  .then(function (separateCoverage) {
+    check.object(separateCoverage, 'missing separate coverage', separateCoverage);
+    reportCoverage(separateCoverage, false);
   })
   .done();
 */
