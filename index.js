@@ -14,9 +14,15 @@ la(check.object(options), 'could not get cli options', options);
 var repoToCoverage = require('./src/repo-to-separate-coverage');
 var reportCoverage = require('./src/report-coverage');
 var updateCoverage = require('./src/update-coverage');
+var openReports = require('./src/open-reports');
 var config = require('./src/config')();
 
 la(check.unemptyString(options.repo), 'missing git repo path', options);
+
+if (options.open) {
+  openReports();
+  process.exit(0);
+}
 
 // either compute initial split coverage
 if (options.reset && options.coverage) {

@@ -116,6 +116,10 @@ function cliOptions() {
       alias: 'f',
       description: 'filter input files expression'
     })
+    .option('open', {
+      boolean: true,
+      description: 'open all current HTML reports'
+    })
     .usage(info)
     .argv;
 

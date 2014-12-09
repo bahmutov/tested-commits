@@ -10,7 +10,8 @@ var R = require('ramda');
 var q = require('q');
 var reportCoverage = require('./report-coverage');
 var config = require('./config')();
-var utils = require('./utils');
+var getSavedCommitsFor = require('./get-commits-folders');
+var savedCommitFolder = require('./utils').savedCommitFolder;
 
 function findCoverage(coverage, path) {
   la(check.absolute(path), 'expected absolute path to search for', path);
@@ -46,10 +47,11 @@ function updateCoverage(initial, updated) {
   return modified;
 }
 
-function updateCommitCoverage(combinedCoverage, slugName, commitId) {
+function updateCommitCoverage(combinedCoverage, repoName, commitId) {
   la(check.commitId(commitId), 'expected commit id', commitId);
 
-  var commitFolder = join(config.commitsFolder, slugName, commitId);
+  var commitFolder = savedCommitFolder(repoName, commitId);
+
   var filename = join(commitFolder, config.latestCommitCoverageFilename);
   if (!exists(filename)) {
     filename = join(commitFolder, config.initialCommitCoverageFilename);
@@ -67,34 +69,16 @@ function updateCommitCoverage(combinedCoverage, slugName, commitId) {
   la(check.object(modified), 'could not get modified coverage for commit', commitId);
   la(modified !== initialCoverage, 'we should not modify initial coverage for commit', commitId);
 
-  reportCoverage(modified, commitId, true, slugName);
-}
-
-function getDirectories(srcpath) {
-  return fs.readdirSync(srcpath).filter(function(file) {
-    return fs.statSync(path.join(srcpath, file)).isDirectory();
-  });
+  reportCoverage(modified, commitId, true, repoName);
 }
 
 function updateSplitCoverages(updatedCoverage, repoName) {
-  la(check.unemptyString(repoName), 'cannot determine repo name', repoName);
-  if (repoName === '.') {
-    repoName = require('path').basename(process.cwd());
-  }
-  console.log('repo name', repoName);
-  var slugName = utils.repoNameToSlug(repoName);
-  la(check.unemptyString(slugName), 'could not convert to slug', repoName);
-
-  var commitsFolder = join(config.commitsFolder, repoName);
-  la(exists(commitsFolder), 'cannot find folder', commitsFolder);
-  var ids = getDirectories(commitsFolder);
-  la(check.arrayOfStrings(ids), 'expected subfolders');
-  la(ids.every(check.commitId), 'expected SHA ids as subfolders', ids, 'in folder', commitsFolder);
-
+  var ids = getSavedCommitsFor(repoName);
+  la(check.arrayOfStrings(ids), 'could not get saved commit ids for repo', repoName);
   // console.log('updating split coverage for ids');
   // console.log(ids);
 
-  ids.forEach(R.lPartial(updateCommitCoverage, updatedCoverage, slugName));
+  ids.forEach(R.lPartial(updateCommitCoverage, updatedCoverage, repoName));
 }
 
 function isCoverageJsonFilename(arg) {
