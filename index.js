@@ -25,7 +25,7 @@ if (options.open) {
 }
 
 // either compute initial split coverage
-if (options.reset && options.coverage) {
+if (options.reset && options.update) {
   console.error('Please reset coverage separately from updating it.');
   process.exit(1);
 }
@@ -49,10 +49,10 @@ if (options.reset) {
 }
 
 // or update prepared split coverage
-if (options.coverage) {
-  console.log('updating split coverage from', options.coverage);
+if (options.update) {
+  console.log('updating split coverage from', options.update);
 
-  updateCoverage(options.coverage, options.repo)
+  updateCoverage(options.update, options.repo)
     .done();
 }
 

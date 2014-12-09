@@ -106,10 +106,10 @@ function cliOptions() {
       description: 'commit filter, for example pick last two -c 2',
       default: 5
     })
-    .option('coverage', {
+    .option('update', {
       string: true,
-      alias: 'x',
-      description: 'path to JSON coverage file to use'
+      alias: 'u',
+      description: 'path to JSON coverage file to update with'
     })
     .option('files', {
       string: true,
