@@ -1,4 +1,4 @@
-# tested-commits v0.5.0
+# tested-commits v0.5.1
 
 > JavaScript code coverage split by commit
 
@@ -24,7 +24,7 @@
 
 ```
 tested-commits - JavaScript code coverage split by commit
-  version: 0.5.0
+  version: 0.5.1
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:
