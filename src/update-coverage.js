@@ -47,7 +47,7 @@ function updateCoverage(initial, updated) {
 
 function updateCommitCoverage(combinedCoverage, commitId) {
   la(check.commitId(commitId), 'expected commit id', commitId);
-  var commitFolder = join(process.cwd(), config.commitsFolder, commitId);
+  var commitFolder = join(config.commitsFolder, commitId);
   var filename = join(commitFolder, config.latestCommitCoverageFilename);
   if (!exists(filename)) {
     filename = join(commitFolder, config.initialCommitCoverageFilename);
@@ -75,7 +75,7 @@ function getDirectories(srcpath) {
 }
 
 function updateSplitCoverages(updatedCoverage) {
-  var commitsFolder = join(process.cwd(), config.commitsFolder);
+  var commitsFolder = join(config.commitsFolder);
   la(exists(commitsFolder), 'cannot find folder', commitsFolder);
   var ids = getDirectories(commitsFolder);
   la(check.arrayOfStrings(ids), 'expected subfolders');

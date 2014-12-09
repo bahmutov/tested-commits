@@ -37,7 +37,7 @@ if (options.reset) {
     // .tap(console.log)
     .then(function (separateCoverage) {
       check.object(separateCoverage, 'missing separate coverage', separateCoverage);
-      reportCoverage(separateCoverage, false);
+      reportCoverage(separateCoverage, false, options.repo);
     })
     .done();
 }

@@ -6,6 +6,7 @@ var fs = require('fs');
 var R = require('ramda');
 var join = require('path').join;
 var config = require('./config')();
+var repoNameToSlug = require('./utils').repoNameToSlug;
 
 function verifyFileCoverage(fileCoverage) {
   la(check.unemptyString(fileCoverage.path), 'coverage object should have path property', fileCoverage);
@@ -13,7 +14,7 @@ function verifyFileCoverage(fileCoverage) {
   la(check.absolute(fileCoverage.path), 'expected source path to be absolute', fileCoverage);
 }
 
-function reportCoverage(coverage, commitId, update) {
+function reportCoverage(coverage, commitId, update, repoName) {
   la(check.maybe.commitId(commitId), 'expected commit id', commitId);
 
   R.values(coverage).forEach(verifyFileCoverage);
@@ -30,7 +31,11 @@ function reportCoverage(coverage, commitId, update) {
 
   var dir = commitId ? commitId : 'html_report';
   la(check.unemptyString(config.commitsFolder), 'expected commits folder', config);
-  var fullDir = join(process.cwd(), config.commitsFolder, dir);
+  var slugName = repoNameToSlug(repoName);
+  la(check.unemptyString(slugName), 'could not slugify repo name', repoName);
+
+  var fullDir = join(config.commitsFolder, slugName, dir);
+
   console.log('full dir', fullDir);
   var htmlReport = Report.create('html', {
     dir: fullDir
@@ -42,13 +47,13 @@ function reportCoverage(coverage, commitId, update) {
   fs.writeFileSync(coverageFilename, JSON.stringify(coverage, null, 2), 'utf-8');
 }
 
-function reportSeparateCoverage(coverageByCommitId, update) {
+function reportSeparateCoverage(coverageByCommitId, update, repoName) {
   la(check.object(coverageByCommitId), 'need split coverage object', coverageByCommitId);
   la(check.maybe.bool(update), 'expected optional bool flag', update);
 
   R.keys(coverageByCommitId)
     .map(function (id) {
-      reportCoverage(coverageByCommitId[id], id, update);
+      reportCoverage(coverageByCommitId[id], id, update, repoName);
     });
 }
 
@@ -65,7 +70,7 @@ module.exports = report;
   Example grab last 2 commits, split coverage and save HTML report for each commit
   separately. Each commit will only show its modified source lines, excluding the other source.
 
-  repoToCoverage(gitRepoFolder, R.take(2))
+  repoToCoverage(gitRepoFolder)
     // .tap(console.log)
     .then(function (separateCoverage) {
       check.object(separateCoverage, 'missing separate coverage', separateCoverage);
