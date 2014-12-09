@@ -1,5 +1,5 @@
 // internal config (options)
-var pkg = require('../package');
+var pkg = require(__dirname + '/../package');
 var join = require('path').join;
 var tmpdir = require('os').tmpdir;
 
