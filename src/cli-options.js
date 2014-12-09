@@ -32,6 +32,22 @@ function startsWith(start, s) {
   return s.indexOf(start) === 0;
 }
 
+function messageContains(word, commit) {
+  la(check.object(commit) && check.unemptyString(commit.message),
+    'invalid commit', commit);
+  return commit.message.indexOf(word) !== -1;
+}
+
+function filterByMessage(word) {
+  return function (commits) {
+    var found = R.find(
+      R.lPartial(messageContains, word),
+      commits
+    );
+    return found ? [found] : [];
+  };
+}
+
 function processOptions(options) {
   var R = require('ramda');
   var join = require('path').join;
@@ -43,6 +59,8 @@ function processOptions(options) {
   } else if (check.shortCommitId(options.commits)) {
     options.commits = filterByCommitId(options.commits,
       R.lPartial(startsWith, options.commits));
+  } else if (check.unemptyString(options.commits)) {
+    options.commits = filterByMessage(options.commits);
   }
 
   if (options.coverage && !check.absolute(options.coverage)) {

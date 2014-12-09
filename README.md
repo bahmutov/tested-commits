@@ -1,4 +1,4 @@
-# tested-commits v0.3.0
+# tested-commits v0.4.0
 
 > JavaScript code coverage split by commit
 
@@ -24,7 +24,7 @@
 
 ```
 tested-commits - JavaScript code coverage split by commit
-  version: 0.3.0
+  version: 0.4.0
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:
@@ -45,6 +45,7 @@ You can pick commits to track coverage for using `--commits` option.
 * `--commits <SHA-1>` picks commit with full SHA id (40 hex characters)
 * `--commits <short SHA-1>` picks commit with short SHA id (7 hex characters), usually
 displayed when you call `git log --oneline` inside a repo.
+* `--commits <part of the commit message>` finds latest commit that contains exact message.
 
 
 
