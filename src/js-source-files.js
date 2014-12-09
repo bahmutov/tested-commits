@@ -6,12 +6,17 @@ var folder = require('./folder');
 var isTracked = require('ggit').isTracked;
 var R = require('ramda');
 
+function is3rdParty(filename) {
+  return /node\_modules/.test(filename) ||
+    /bower\_components/.test(filename);
+}
+
 function findFiles(pattern) {
   pattern = pattern || '**/*.js';
   var jsFiles = glob.sync(pattern);
-  return q(jsFiles);
-  // console.log('found js files');
-  // console.log(jsFiles.join('\n'));
+  var appFiles = jsFiles.filter(R.not(is3rdParty));
+  console.log('found files\n' + appFiles.join('\n'));
+  return q(appFiles);
 }
 
 function leaveTracked(filenames) {
