@@ -22,6 +22,8 @@
 
 
 
+Read [Code coverage by commit](http://bahmutov.calepin.co/code-coverage-by-commit.html).
+
 ```
 tested-commits - JavaScript code coverage split by commit
   version: 0.5.2
