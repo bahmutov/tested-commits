@@ -3,7 +3,7 @@ var check = require('check-more-types');
 var R = require('ramda');
 var d3h = require('d3-helpers');
 
-var folders = require('./folder');
+var folders = require('chdir-promise');
 var commits = require('./commits');
 var sourceFiles = require('./js-source-files');
 var commitPerLine = require('./commit-per-line');

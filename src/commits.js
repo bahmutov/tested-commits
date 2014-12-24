@@ -2,7 +2,7 @@ require('lazy-ass');
 var check = require('check-more-types');
 var ggit = require('ggit');
 var fs = require('fs');
-var folders = require('./folder');
+var folders = require('chdir-promise');
 var R = require('ramda');
 
 /*

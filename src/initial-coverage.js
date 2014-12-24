@@ -2,7 +2,7 @@ require('lazy-ass');
 var check = require('check-more-types');
 var d3h = require('d3-helpers');
 
-var folders = require('./folder');
+var folders = require('chdir-promise');
 var sourceFiles = require('./js-source-files');
 var fileCoverage = require('./file-coverage');
 

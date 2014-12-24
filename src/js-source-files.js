@@ -2,7 +2,7 @@ require('lazy-ass');
 var check = require('check-more-types');
 var glob = require('glob');
 var q = require('q');
-var folder = require('./folder');
+var folder = require('chdir-promise');
 var isTracked = require('ggit').isTracked;
 var R = require('ramda');
 
