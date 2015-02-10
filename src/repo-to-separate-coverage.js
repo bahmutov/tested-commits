@@ -4,7 +4,7 @@ var R = require('ramda');
 var d3h = require('d3-helpers');
 
 var folders = require('chdir-promise');
-var commits = require('./commits');
+var commits = require('ggit').commits;
 var sourceFiles = require('./js-source-files');
 var commitPerLine = require('./commit-per-line');
 var fileCoverage = require('./file-coverage');
