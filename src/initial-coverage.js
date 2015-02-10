@@ -3,7 +3,7 @@ var check = require('check-more-types');
 var d3h = require('d3-helpers');
 
 var folders = require('chdir-promise');
-var sourceFiles = require('./js-source-files');
+var sourceFiles = require('ggit').trackedFiles;
 var fileCoverage = require('./file-coverage');
 
 function initialCoverage(folder) {

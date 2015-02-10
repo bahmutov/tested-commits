@@ -5,7 +5,7 @@ var d3h = require('d3-helpers');
 
 var folders = require('chdir-promise');
 var commits = require('ggit').commits;
-var sourceFiles = require('./js-source-files');
+var sourceFiles = require('ggit').trackedFiles;
 var commitPerLine = require('./commit-per-line');
 var fileCoverage = require('./file-coverage');
 var coveragePerCommit = require('./coverage-per-commit');
