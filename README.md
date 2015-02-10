@@ -1,4 +1,4 @@
-# tested-commits v0.5.2
+# tested-commits v0.5.3
 
 > JavaScript code coverage split by commit
 
@@ -26,7 +26,7 @@ Read [Code coverage by commit](http://bahmutov.calepin.co/code-coverage-by-commi
 
 ```
 tested-commits - JavaScript code coverage split by commit
-  version: 0.5.2
+  version: 0.5.3
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:

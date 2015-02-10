@@ -1,7 +1,7 @@
 {
   "name": "tested-commits",
   "description": "JavaScript code coverage split by commit",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "bin": {
     "tested-commits": "./index.js"

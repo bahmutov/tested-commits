@@ -1,5 +1,5 @@
 tested-commits - JavaScript code coverage split by commit
-  version: 0.5.2
+  version: 0.5.3
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:
