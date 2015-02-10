@@ -57,7 +57,10 @@
   ],
   "license": "MIT",
   "main": "index.js",
-  "pre-commit": "npm test",
+  "pre-commit": [
+    "npm test",
+    "npm version"
+  ],
   "preferGlobal": true,
   "repository": {
     "type": "git",
