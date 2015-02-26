@@ -22,7 +22,7 @@
 
 
 
-Read [Code coverage by commit](http://bahmutov.calepin.co/code-coverage-by-commit.html).
+Read [Code coverage by commit](http://glebbahmutov.com/blog/code-coverage-by-commit/).
 
 ```
 tested-commits - JavaScript code coverage split by commit

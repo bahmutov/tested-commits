@@ -4,7 +4,7 @@
 
 {%= _.doc("./docs/badges.md") %}
 
-Read [Code coverage by commit](http://bahmutov.calepin.co/code-coverage-by-commit.html).
+Read [Code coverage by commit](http://glebbahmutov.com/blog/code-coverage-by-commit/).
 
 ```
 {%= _.doc("./docs/help.md") %}
