@@ -1,4 +1,4 @@
-# tested-commits v0.5.4
+# tested-commits v0.5.5
 
 > JavaScript code coverage split by commit
 
@@ -26,7 +26,7 @@ Read [Code coverage by commit](http://glebbahmutov.com/blog/code-coverage-by-com
 
 ```
 tested-commits - JavaScript code coverage split by commit
-  version: 0.5.4
+  version: 0.5.5
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:
@@ -73,7 +73,7 @@ Author: Gleb Bahmutov &copy; 2014
 
 * [@bahmutov](https://twitter.com/bahmutov)
 * [glebbahmutov.com](http://glebbahmutov.com)
-* [blog](http://bahmutov.calepin.co/)
+* [blog](http://glebbahmutov.com/blog/)
 
 License: MIT - do anything with the code, but don't blame me if it does not work.
 
