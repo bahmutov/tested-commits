@@ -16,7 +16,7 @@
     "check-types": "1.4.0",
     "console.table": "0.4.0",
     "d3-helpers": "0.3.0",
-    "ggit": "0.8.0",
+    "ggit": "0.9.0",
     "glob": "4.3.5",
     "istanbul": "0.3.5",
     "lazy-ass": "0.5.3",
